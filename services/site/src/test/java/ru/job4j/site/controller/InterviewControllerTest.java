@@ -11,15 +11,9 @@ import ru.job4j.site.SiteSrv;
 import ru.job4j.site.domain.Breadcrumb;
 import ru.job4j.site.domain.StatusInterview;
 import ru.job4j.site.dto.*;
-import ru.job4j.site.service.AuthService;
-import ru.job4j.site.service.InterviewService;
-import ru.job4j.site.service.TopicsService;
-import ru.job4j.site.service.WisherService;
+import ru.job4j.site.service.*;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import static org.mockito.Mockito.doThrow;
@@ -43,6 +37,8 @@ public class InterviewControllerTest {
     private AuthService authService;
     @MockBean
     private WisherService wisherService;
+    @MockBean
+    private ProfilesService profilesService;
 
     @Test
     public void whenShowDetails() throws Exception {
@@ -58,7 +54,11 @@ public class InterviewControllerTest {
         interview.setAdditional("Some description");
         interview.setMode(4);
         interview.setTopicId(1);
+        interview.setSubmitterId(1);
         List<WisherDto> wisherDtos = new ArrayList<>();
+        ProfileDTO profile1 = new ProfileDTO();
+        profile1.setId(1);
+        profile1.setUsername("username1");
         when(authService.userInfo(token)).thenReturn(userInfo);
         when(interviewService.getById(token, 1)).thenReturn(interview);
         when(interviewService.isAuthor(userInfo, interview)).thenReturn(false);
@@ -66,6 +66,7 @@ public class InterviewControllerTest {
                 .thenReturn(wisherDtos);
         when(wisherService.getInterviewStatistic(wisherDtos)).thenReturn(new HashMap<>());
         when(wisherService.isWisher(userInfo.getId(), interview.getId(), wisherDtos)).thenReturn(false);
+        when(profilesService.getProfileById(1)).thenReturn(Optional.of(profile1));
         mockMvc.perform(get("/interview/{id}", interview.getId())
                         .sessionAttr("token", token))
                 .andDo(print())
