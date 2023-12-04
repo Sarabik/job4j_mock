@@ -50,21 +50,21 @@
                 <div class="card-body">
                     <table class="table">
                         <tbody class="table-hover">
-                        <tr th:each="interview: ${new_interviews}" style="cursor: pointer;">
+                        <tr th:each="interview: ${interviewsMap}" style="cursor: pointer;">
                             <td>
                                 <div>
                                     <a class="fw-bold text-dark text-decoration-none"
-                                       th:href="@{|/interview/${interview.id}|}">
-                                        <h5 th:text="${interview.title}"></h5>
+                                       th:href="@{|/interview/${interview.key.id}|}">
+                                        <h5 th:text="${interview.key.title}"></h5>
                                     </a>
                                 </div>
                                 <div class="pb-2">
                                     <span class="mb-2 text-muted">
                                         <span class="badge bg-success">Новое</span>
                                         <i class="far fa-clock"></i>
-                                        <span th:text="${#strings.substring(interview.createDate, 0, 10)}"></span>
+                                        <span th:text="${#strings.substring(interview.key.createDate, 0, 10)}"></span>
                                         <i class="far fa-user"></i>
-                                        <span>ФИО пользователя</span>
+                                        <span th:text="${interview.value.username}">ФИО пользователя</span>
                                     </span>
                                 </div>
                             </td>
